@@ -14,16 +14,16 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"syscall"
 )
 
-// Uname returns the uname of the host machine.
-func Uname() string {
+// mustUname returns the uname of the host machine.
+func mustUname() string {
 	buf := syscall.Utsname{}
 	err := syscall.Uname(&buf)
 	if err != nil {
-		log.Fatal("Error!")
+		panic(fmt.Errorf("error getting uname: %s", err))
 	}
 
 	str := "(" + charsToString(buf.Sysname[:])

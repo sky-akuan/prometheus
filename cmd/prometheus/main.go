@@ -19,7 +19,6 @@ import (
 	"fmt"
 	"net"
 	"net/http"
-	_ "net/http/pprof" // Comment this line to disable pprof endpoint.
 	"net/url"
 	"os"
 	"os/signal"
@@ -214,7 +213,7 @@ func main() {
 
 	level.Info(logger).Log("msg", "Starting Prometheus", "version", version.Info())
 	level.Info(logger).Log("build_context", version.BuildContext())
-	level.Info(logger).Log("host_details", Uname())
+	level.Info(logger).Log("host_details", mustUname())
 
 	// Make sure that sighup handler is registered with a redirect to the channel before the potentially
 	// long and synchronous tsdb init.

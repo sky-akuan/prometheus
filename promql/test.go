@@ -51,7 +51,8 @@ type Test struct {
 
 	cmds []testCommand
 
-	storage storage.Storage
+	newStorage func(t testutil.T) storage.Storage
+	storage    storage.Storage
 
 	queryEngine *Engine
 	context     context.Context
@@ -59,7 +60,10 @@ type Test struct {
 }
 
 // NewTest returns an initialized empty Test.
-func NewTest(t testutil.T, input string) (*Test, error) {
+func NewTest(t testutil.T, input string, newStorage func(t testutil.T) storage.Storage) (*Test, error) {
+	if newStorage == nil {
+		newStorage = testutil.NewStorage
+	}
 	test := &Test{
 		T:    t,
 		cmds: []testCommand{},
@@ -70,12 +74,13 @@ func NewTest(t testutil.T, input string) (*Test, error) {
 	return test, err
 }
 
-func newTestFromFile(t testutil.T, filename string) (*Test, error) {
+// NewTestFromFile creates a test from the contents of a file.
+func NewTestFromFile(t testutil.T, filename string, newStorage func(t testutil.T) storage.Storage) (*Test, error) {
 	content, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
-	return NewTest(t, string(content))
+	return NewTest(t, string(content), newStorage)
 }
 
 // QueryEngine returns the test's query engine.
@@ -493,7 +498,7 @@ func (t *Test) clear() {
 	if t.cancelCtx != nil {
 		t.cancelCtx()
 	}
-	t.storage = testutil.NewStorage(t)
+	t.storage = t.newStorage(t)
 
 	t.queryEngine = NewEngine(t.storage, nil)
 	t.context, t.cancelCtx = context.WithCancel(context.Background())

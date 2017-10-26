@@ -38,7 +38,7 @@ var (
 // Load parses the YAML input s into a Config.
 func Load(s string) (*Config, error) {
 	cfg := &Config{}
-	// If the entire config body is empty the UnmarshalYAML method is
+	// If the entire config body is empty, the UnmarshalYAML method is
 	// never called. We thus have to set the DefaultConfig at the entry
 	// point as well.
 	*cfg = DefaultConfig
@@ -88,7 +88,7 @@ var (
 		HonorLabels: false,
 	}
 
-	// DefaultAlertmanagerConfig is the default alertmanager configuration.
+	// DefaultAlertmanagerConfig is the default Alertmanager configuration.
 	DefaultAlertmanagerConfig = AlertmanagerConfig{
 		Scheme:  "http",
 		Timeout: 10 * time.Second,
@@ -176,7 +176,7 @@ var (
 		QueueConfig:   DefaultQueueConfig,
 	}
 
-	// DefaultQueueConfig is the default remote queue configuration.
+	// DefaultQueueConfig is the default remote write queue configuration.
 	DefaultQueueConfig = QueueConfig{
 		// With a maximum of 1000 shards, assuming an average of 100ms remote write
 		// time and 100 samples per batch, we will be able to push 1M samples/s.
